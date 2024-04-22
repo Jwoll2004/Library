@@ -1,12 +1,10 @@
 const myLibrary = [];
 
-function Book(title, author, pages, read, index) {
+function Book(title, author, pages, read) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.read = read;
-  // index of this book in the myLibrary array
-  this.index = index;
 }
 
 Book.prototype.toggleRead = function(){
@@ -30,18 +28,22 @@ function AddBookToLibrary(){
 
 function DisplayBooksAsCards(){
   const cardContainer = document.querySelector('.card-container');
-  myLibrary.forEach(book => {
+  for(let i = 0; i < myLibrary.length; i++){
     const card = document.createElement('div');
+    card.setAttribute('data-index', i);
     card.classList.add('card');
 
     const cardbuttons = document.createElement('div');
     cardbuttons.classList.add('card-buttons');
+
     const readBtn = document.createElement('button');
     readBtn.classList.add('status-btn');
+
     const removeBtn = document.createElement('button');
     removeBtn.textContent = 'Remove';
     removeBtn.classList.add('remove');
-    if(book.read){
+
+    if(myLibrary[i].read){
       readBtn.classList.add('green');
       readBtn.textContent = 'Read';
     }
@@ -52,13 +54,14 @@ function DisplayBooksAsCards(){
     cardbuttons.appendChild(readBtn);
     cardbuttons.appendChild(removeBtn);
     card.innerHTML = `
-      <h3>${book.title}</h3>
-      <p>Author: ${book.author}</p>
-      <p>Pages: ${book.pages}</p>
+      <h3>${myLibrary[i].title}</h3>
+      <p>Author: ${myLibrary[i].author}</p>
+      <p>Pages: ${myLibrary[i].pages}</p>
     `;
     card.appendChild(cardbuttons);
     cardContainer.appendChild(card);
-  });
+  }
+
 }
 
 //function that gets current form values, creates a book and returns it
@@ -67,7 +70,7 @@ function GetFormValues(){
   const author = document.querySelector('#author').value;
   const pages = document.querySelector('#pages').value;
   const read = document.querySelector('#read').checked;
-  const newBook = new Book(title, author, pages, read, myLibrary.length);
+  const newBook = new Book(title, author, pages, read);
   return newBook;
 }
 
@@ -98,12 +101,12 @@ function ValidateForm() {
   return true;
 }
 
+// select elements and add event listeners -------------------------------------------------------------------------------------------------------------------------------
+
 const addBookBtn = document.querySelector('.add-book-btn');
 const dialog = document.querySelector('.dialog');
 const submitBtn = document.querySelector('.submit');
 const cancelBtn = document.querySelector('.cancel');
-const statusbtn = document.querySelector('.status-btn');
-const removebtn = document.querySelector('.remove');
 
 addBookBtn.addEventListener('click', () => {
   dialog.showModal();
@@ -135,10 +138,20 @@ submitBtn.addEventListener('click', (event) => {
   }
 });
 
-removebtn.addEventListener('click', (event) => {
-  const card = event.target.parentElement.parentElement;
-  const index = card.querySelector('h3').textContent;
-  myLibrary.splice(index, 1);
-  ResetCardContainer();
-  DisplayBooksAsCards();
+// check if status button exists if yes, then addevnt listener to it and toggle read status else do nothing
+// similarly for remove button
+
+document.querySelector('.card-container').addEventListener('click', (event) => {
+  if(event.target.classList.contains('status-btn')){
+    const index = event.target.parentElement.parentElement.getAttribute('data-index');
+    myLibrary[index].toggleRead();
+    ResetCardContainer();
+    DisplayBooksAsCards();
+  }
+  else if(event.target.classList.contains('remove')){
+    const index = event.target.parentElement.parentElement.getAttribute('data-index');
+    myLibrary.splice(index, 1);
+    ResetCardContainer();
+    DisplayBooksAsCards();
+  }
 });
