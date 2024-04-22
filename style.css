@@ -13,10 +13,13 @@ body {
     min-height: 100vh;
     display: grid;
     grid-template-rows: auto 4fr auto;
+    background-color: #f0eef1;
+}
+.header, .footer {
+    background-color: white;
 }
 
 button{
-    
     font-size: 1rem;
     cursor: pointer;
     border: none;
@@ -41,8 +44,8 @@ button:hover{
 
 /* header section */
 .header{ 
-    padding: 10px 20px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.149);
+    padding: 0px 20px;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.158);
     
     display: grid;
     grid-template-columns: auto 2fr;
@@ -51,14 +54,13 @@ button:hover{
 }
 
 .logo img{
-    height: 70px;
+    height: 100px;
     width: auto;
     border-radius: 50%;
 }
 
 .main-content {
     padding: 20px;
-    background-color: #f0eef1;
 
     display: flex;
     flex-direction: column;
@@ -140,7 +142,7 @@ input {
 /* footer section */
 .footer {
     padding: 20px;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.149);
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.158);
 
     display: flex;
     justify-content: center;
