@@ -33,24 +33,47 @@
         </button>
 
         <div class="card-container">
-            <div class="card">
-                <p>Title</p>
-                <p>Author</p>
-                <p>Pages</p>
-                <div class="card-buttons">
-                    <button class="green">Read</button>
-                    <button>Remove</button>
-                </div>
-            </div>
+            
         </div>
     </div>
+
+    <dialog class="dialog">
+        <form>
+            <h3>Add a new book</h3>
+            <div class="error-msg">
+
+            </div>
+            <label for="title">
+                Title:
+                <input type="text" id="title" placeholder="Game Of Thrones" required maxlength="100">
+            </label>
+            <label for="author">
+                Author:
+                <input type="text" id="author" placeholder="George R. R. Martin" required maxlength="100">
+            </label>
+            <label for="pages">
+                Pages:
+                <input type="number" id="pages" required min = "1" max="10000">
+            </label>
+            <div class="status">
+                <label for="read">
+                    Have you read this book?
+                    <input type="checkbox" id="read">
+                </label>
+            </div>
+            <div class="form-buttons">
+                <button value="cancel" formmethod="dialog" class="cancel">Cancel</button>
+                <button class="submit green" value="default">Submit</button>
+            </div>
+        </form>
+    </dialog>
 
     <div class="footer">
         <div class="footer-content">
             <img class="icon" src="images/booktitle.svg" alt="book logo">
             <p>Created by Jwacker</p>
         </div>
-        <a class="git" href="https://github.com/Jwoll2004/Library">
+        <a class="git" href="https://github.com/Jwoll2004/Library" target="_blank">
             <img class="icon" src="images/github.svg" alt="github logo">
             <p>GitHub</p>
         </a>

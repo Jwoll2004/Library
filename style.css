@@ -67,6 +67,7 @@ button:hover{
 }
 
 .card-container{
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
@@ -95,6 +96,43 @@ button:hover{
 }
 .red {
     background-color: #ff6b6b;
+}
+
+.dialog{
+    justify-self: center;
+    align-self: center;
+    text-align: center;
+    width: 300px;
+
+    border-radius: 20px;
+    box-shadow: 0 0 50px 0 rgba(255, 255, 255, 0.589);
+    border: none;
+}
+.error-msg {
+    color: red;
+    font-weight: bold;
+}
+.dialog form{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+.form-buttons {
+    width: 100%;
+    display: grid;
+    gap: 10px;
+}
+input {
+    margin-left: 5px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+::backdrop {
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 
