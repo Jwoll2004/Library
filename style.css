@@ -58,7 +58,7 @@ button:hover{
     width: auto;
     border-radius: 50%;
 }
-
+/* card section */
 .main-content {
     padding: 20px;
 
@@ -87,6 +87,10 @@ button:hover{
     flex-direction: column;
     justify-items: space-between;
     gap: 20px;
+}
+.card img{
+    height: 300px;
+    width: auto;
 }
 .card-buttons{
     display: flex;
