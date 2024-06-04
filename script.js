@@ -8,8 +8,6 @@ function Book(title, author, pages, read, coverurl) {
   this.coverurl = coverurl;
 }
 
-
-
 Book.prototype.toggleRead = function () {
   this.read = !this.read;
 }
@@ -29,7 +27,6 @@ async function AddBookToLibrary() {
   DisplayBooksAsCards();
 }
 
-
 //function that gets current form values, creates a book and returns it
 async function GetFormValues() {
   const title = document.querySelector('#title').value;
@@ -41,51 +38,6 @@ async function GetFormValues() {
   return newBook;
 }
 
-// function to fetch api details and return author, paegs, coverurl
-
-// async function fetchBookDetails(title){
-//   const BookDeetsURL = `https://openlibrary.org/search.json?q=${title.replace(' ', '+')}`;
-  
-//   let author = '';
-//   let pages = '';
-//   let coverurl = '';
-//   fetch(BookDeetsURL)
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.json();
-//     })
-//     .then(data => {
-//       const firstDoc = data.docs[0];
-//       const firstIsbn = firstDoc.isbn[0];
-//       author = firstDoc.author_name[0];
-//       console.log(author);
-//       pages = firstDoc.number_of_pages_median;
-
-//       const BookCoverURL = `http://bookcover.longitood.com/bookcover/${firstIsbn}`;
-
-//       return fetch(BookCoverURL);
-//     })
-//     .then(response => {
-//       if (!response.ok) {
-//         throw new Error('Network response was not ok');
-//       }
-//       return response.json();
-//     })
-//     .then(data => {
-//       const imageURL = data.url;
-//       coverurl = imageURL;
-//     })
-//     .then(() => {
-//       console.log('Success:', author, pages, coverurl);
-//       return {author, pages, coverurl};
-//     })
-//     .catch(error => {
-//       console.error('Error:', error);
-//       outputElement.textContent = 'An error occurred while fetching data.';
-//     });
-// }
 async function fetchBookDetails(title) {
   const BookDeetsURL = `https://openlibrary.org/search.json?q=${title.replace(/\s+/g, '+')}`;
   
