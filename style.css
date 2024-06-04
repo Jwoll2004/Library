@@ -63,7 +63,7 @@ button:hover{
     padding: 20px;
 
     display: grid;
-    grid-template-columns: 4fr 1fr;
+    grid-template-columns: 2.5fr 1fr;
 }
 
 .myLib{
@@ -151,11 +151,11 @@ input {
 
 /* browse section */
 .browse{
-    padding: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
 
     display: flex;
     flex-direction: column;
-    gap: 20px;
     align-items: center;
     border-left: 1px solid #ccc;
 }
@@ -167,7 +167,7 @@ input {
 }
 .search input {
     /* set relative width */
-    width: 60%;
+    width: 100%;
 }
 .search-btn{
     padding: 5px;
@@ -175,6 +175,31 @@ input {
 .search-btn img{
     height: 30px;
     width: auto;
+}
+
+.results{
+    width: 100%;
+    padding: 20px;
+    /* set relative font size */
+    font-size: 15px;
+}
+.resCard{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    width: 100%;
+}
+.res-title {
+    font-weight: bold;
+}
+.res-cover{
+    /* set relative size of the image */
+    height: 100px;
+    width: auto;
+}
+.res-add-btn {
+    margin-left: auto;
+    width: min-content;    
 }
 
 

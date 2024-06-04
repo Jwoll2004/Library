@@ -32,73 +32,73 @@ async function GetFormValues() {
   const title = document.querySelector('#title').value;
   const read = document.querySelector('#read').checked;
 
-  const {author, pages, coverurl} = await fetchBookDetails(title);
-  
+  const { author, pages, coverurl } = await fetchBookDetails(title);
+
   const newBook = new Book(title, author, pages, read, coverurl);
   return newBook;
 }
 
 async function fetchBookDetails(title) {
   const BookDeetsURL = `https://openlibrary.org/search.json?q=${title.replace(/\s+/g, '+')}`;
-  
 
-    const response = await fetch(BookDeetsURL);
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    const firstDoc = data.docs[0];
 
-    let firstIsbn = '';
-    for (let i = 0; i < firstDoc.isbn.length; i++) {
-      if (isValidIsbn(firstDoc.isbn[i])) {
-        firstIsbn = firstDoc.isbn[i];
-        break;
-      }
-    }
+  const response = await fetch(BookDeetsURL);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const data = await response.json();
+  const firstDoc = data.docs[0];
 
-    const author = firstDoc.author_name[0];
-    const pages = firstDoc.number_of_pages_median;
-    
-    const BookCoverURL = `http://bookcover.longitood.com/bookcover/${firstIsbn}`;
-    const coverResponse = await fetch(BookCoverURL);
-    if (!coverResponse.ok) {
-      throw new Error('Network response was not ok');
+  let firstIsbn = '';
+  for (let i = 0; i < firstDoc.isbn.length; i++) {
+    if (isValidIsbn(firstDoc.isbn[i])) {
+      firstIsbn = firstDoc.isbn[i];
+      break;
     }
-    const coverData = await coverResponse.json();
-    const coverurl = coverData.url;
-    
-    console.log('Success:', author, pages, coverurl);
-    return {author, pages, coverurl};
-  
+  }
+
+  const author = firstDoc.author_name[0];
+  const pages = firstDoc.number_of_pages_median;
+
+  const BookCoverURL = `http://bookcover.longitood.com/bookcover/${firstIsbn}`;
+  const coverResponse = await fetch(BookCoverURL);
+  if (!coverResponse.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const coverData = await coverResponse.json();
+  const coverurl = coverData.url;
+
+  console.log('Success:', author, pages, coverurl);
+  return { author, pages, coverurl };
+
 }
 
 // function to validate isbn 13
 function isValidIsbn(str) {
 
   var sum,
-      digit,
-      check,
-      i;
+    digit,
+    check,
+    i;
 
   str = str.replace(/[^0-9X]/gi, '');
 
   if (str.length != 13) {
-      return false;
+    return false;
   }
 
   if (str.length == 13) {
-      sum = 0;
-      for (i = 0; i < 12; i++) {
-          digit = parseInt(str[i]);
-          if (i % 2 == 1) {
-              sum += 3*digit;
-          } else {
-              sum += digit;
-          }
+    sum = 0;
+    for (i = 0; i < 12; i++) {
+      digit = parseInt(str[i]);
+      if (i % 2 == 1) {
+        sum += 3 * digit;
+      } else {
+        sum += digit;
       }
-      check = (10 - (sum % 10)) % 10;
-      return (check == str[str.length-1]);
+    }
+    check = (10 - (sum % 10)) % 10;
+    return (check == str[str.length - 1]);
   }
 };
 
@@ -220,5 +220,41 @@ document.querySelector('.card-container').addEventListener('click', (event) => {
     myLibrary.splice(index, 1);
     ResetCardContainer();
     DisplayBooksAsCards();
+  }
+});
+
+const searchInput = document.getElementById('search');
+const searchButton = document.querySelector('.search-btn');
+const resultsDiv = document.querySelector('.results');
+
+async function performSearch() {
+  // clear previous search results
+  resultsDiv.textContent = '';
+  const title = searchInput.value.trim();
+  if (title) {
+    const { author, pages, coverurl } = await fetchBookDetails(title);
+    const rescard = document.createElement('div');
+    rescard.classList.add('resCard');
+
+    rescard.innerHTML = `
+      <img src=${coverurl} class="res-cover" alt="book cover">
+      <div class="res-details">
+        <p class="res-title">${title}</p>
+        <p>Author: ${author}</p>
+        <p>Pages: ${pages}</p>
+      </div>
+      <button class="res-add-btn green">Add to Library</button>
+    `;
+    resultsDiv.appendChild(rescard);
+  }
+  else {
+    resultsDiv.textContent = '';
+  }
+}
+
+searchButton.addEventListener('click', performSearch);
+searchInput.addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    performSearch();
   }
 });
