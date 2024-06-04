@@ -237,14 +237,14 @@ async function performSearch() {
     rescard.classList.add('resCard');
 
     rescard.innerHTML = `
-      <img src=${coverurl} class="res-cover" alt="book cover">
-      <div class="res-details">
-        <p class="res-title">${title}</p>
-        <p>Author: ${author}</p>
-        <p>Pages: ${pages}</p>
-      </div>
-      <button class="res-add-btn green">Add to Library</button>
-    `;
+    <img src=${coverurl} class="res-cover" alt="book cover">
+    <div class="res-details">
+    <p class="res-title">${title}</p>
+        <p class = "res-auth">Author: ${author}</p>
+        <p class = "res-pg">Pages: ${pages}</p>
+        </div>
+        <button class="res-add-btn green">Add to Library</button>
+        `;
     resultsDiv.appendChild(rescard);
   }
   else {
@@ -256,5 +256,24 @@ searchButton.addEventListener('click', performSearch);
 searchInput.addEventListener('keypress', (event) => {
   if (event.key === 'Enter') {
     performSearch();
+  }
+});
+
+// select result add button if it exists in the DOM(obviously, if we have not searched for a book, it will not exist)
+// add event listener to it and add the book to the library
+
+// wait till the button is added to the DOM
+
+document.querySelector('.results').addEventListener('click', (event) => {
+  if (event.target.classList.contains('res-add-btn')) {
+    const title = event.target.parentElement.querySelector('.res-title').textContent;
+    const author = event.target.parentElement.querySelector('.res-auth').textContent.split(': ')[1];
+    const pages = event.target.parentElement.querySelector('.res-pg').textContent.split(': ')[1];
+    const coverurl = event.target.parentElement.parentElement.querySelector('.res-cover').src;
+
+    const newBook = new Book(title, author, pages, false, coverurl);
+    myLibrary.push(newBook);
+    ResetCardContainer();
+    DisplayBooksAsCards();
   }
 });
