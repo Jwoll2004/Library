@@ -226,9 +226,23 @@ input {
     gap: 10px;
     align-items: center;
 }
-
 .icon {
     height: 40px;
     width: 40px;
+}
+
+.credits{
+    display: flex;
+    gap: 10px;
+}
+.cred-links {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+}
+.cred-links a {
+    text-decoration: underline;
+    color: rgb(100, 100, 100);
 }
 
