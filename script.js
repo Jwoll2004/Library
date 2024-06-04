@@ -1,19 +1,22 @@
 const myLibrary = [];
 
-function Book(title, author, pages, read) {
+function Book(title, author, pages, read, coverurl) {
   this.title = title;
   this.author = author;
   this.pages = pages;
   this.read = read;
+  this.coverurl = coverurl;
 }
 
-Book.prototype.toggleRead = function(){
+
+
+Book.prototype.toggleRead = function () {
   this.read = !this.read;
 }
 
-function AddBookToLibrary(){
+async function AddBookToLibrary() {
   // get form values
-  const newBook = GetFormValues();
+  const newBook = await GetFormValues();
 
   myLibrary.push(newBook);
 
@@ -26,9 +29,130 @@ function AddBookToLibrary(){
   DisplayBooksAsCards();
 }
 
-function DisplayBooksAsCards(){
+
+//function that gets current form values, creates a book and returns it
+async function GetFormValues() {
+  const title = document.querySelector('#title').value;
+  const read = document.querySelector('#read').checked;
+
+  const {author, pages, coverurl} = await fetchBookDetails(title);
+  
+  const newBook = new Book(title, author, pages, read, coverurl);
+  return newBook;
+}
+
+// function to fetch api details and return author, paegs, coverurl
+
+// async function fetchBookDetails(title){
+//   const BookDeetsURL = `https://openlibrary.org/search.json?q=${title.replace(' ', '+')}`;
+  
+//   let author = '';
+//   let pages = '';
+//   let coverurl = '';
+//   fetch(BookDeetsURL)
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       const firstDoc = data.docs[0];
+//       const firstIsbn = firstDoc.isbn[0];
+//       author = firstDoc.author_name[0];
+//       console.log(author);
+//       pages = firstDoc.number_of_pages_median;
+
+//       const BookCoverURL = `http://bookcover.longitood.com/bookcover/${firstIsbn}`;
+
+//       return fetch(BookCoverURL);
+//     })
+//     .then(response => {
+//       if (!response.ok) {
+//         throw new Error('Network response was not ok');
+//       }
+//       return response.json();
+//     })
+//     .then(data => {
+//       const imageURL = data.url;
+//       coverurl = imageURL;
+//     })
+//     .then(() => {
+//       console.log('Success:', author, pages, coverurl);
+//       return {author, pages, coverurl};
+//     })
+//     .catch(error => {
+//       console.error('Error:', error);
+//       outputElement.textContent = 'An error occurred while fetching data.';
+//     });
+// }
+async function fetchBookDetails(title) {
+  const BookDeetsURL = `https://openlibrary.org/search.json?q=${title.replace(/\s+/g, '+')}`;
+  
+
+    const response = await fetch(BookDeetsURL);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    const firstDoc = data.docs[0];
+
+    let firstIsbn = '';
+    for (let i = 0; i < firstDoc.isbn.length; i++) {
+      if (isValidIsbn(firstDoc.isbn[i])) {
+        firstIsbn = firstDoc.isbn[i];
+        break;
+      }
+    }
+
+    const author = firstDoc.author_name[0];
+    const pages = firstDoc.number_of_pages_median;
+    
+    const BookCoverURL = `http://bookcover.longitood.com/bookcover/${firstIsbn}`;
+    const coverResponse = await fetch(BookCoverURL);
+    if (!coverResponse.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const coverData = await coverResponse.json();
+    const coverurl = coverData.url;
+    
+    console.log('Success:', author, pages, coverurl);
+    return {author, pages, coverurl};
+  
+}
+
+// function to validate isbn 13
+function isValidIsbn(str) {
+
+  var sum,
+      digit,
+      check,
+      i;
+
+  str = str.replace(/[^0-9X]/gi, '');
+
+  if (str.length != 13) {
+      return false;
+  }
+
+  if (str.length == 13) {
+      sum = 0;
+      for (i = 0; i < 12; i++) {
+          digit = parseInt(str[i]);
+          if (i % 2 == 1) {
+              sum += 3*digit;
+          } else {
+              sum += digit;
+          }
+      }
+      check = (10 - (sum % 10)) % 10;
+      return (check == str[str.length-1]);
+  }
+};
+
+function DisplayBooksAsCards() {
   const cardContainer = document.querySelector('.card-container');
-  for(let i = 0; i < myLibrary.length; i++){
+  for (let i = 0; i < myLibrary.length; i++) {
     const card = document.createElement('div');
     card.setAttribute('data-index', i);
     card.classList.add('card');
@@ -43,20 +167,24 @@ function DisplayBooksAsCards(){
     removeBtn.textContent = 'Remove';
     removeBtn.classList.add('remove');
 
-    if(myLibrary[i].read){
+    if (myLibrary[i].read) {
       readBtn.classList.add('green');
       readBtn.textContent = 'Read';
     }
-    else{
+    else {
       readBtn.classList.add('red');
       readBtn.textContent = 'Not Read';
     }
     cardbuttons.appendChild(readBtn);
     cardbuttons.appendChild(removeBtn);
     card.innerHTML = `
+       <h3>${myLibrary[i].title}</h3>
+      `;
+    card.innerHTML = `
       <h3>${myLibrary[i].title}</h3>
       <p>Author: ${myLibrary[i].author}</p>
       <p>Pages: ${myLibrary[i].pages}</p>
+      <img src=${myLibrary[i].coverurl} alt="Book Cover">
     `;
     card.appendChild(cardbuttons);
     cardContainer.appendChild(card);
@@ -64,26 +192,15 @@ function DisplayBooksAsCards(){
 
 }
 
-//function that gets current form values, creates a book and returns it
-function GetFormValues(){
-  const title = document.querySelector('#title').value;
-  const author = document.querySelector('#author').value;
-  const pages = document.querySelector('#pages').value;
-  const read = document.querySelector('#read').checked;
-  const newBook = new Book(title, author, pages, read);
-  return newBook;
-}
 
 //function to clear form values
-function ClearForm(){
+function ClearForm() {
   document.querySelector('#title').value = '';
-  document.querySelector('#author').value = '';
-  document.querySelector('#pages').value = '';
   document.querySelector('#read').checked = false;
 }
 
 //function to reset card container
-function ResetCardContainer(){
+function ResetCardContainer() {
   const cardContainer = document.querySelector('.card-container');
   cardContainer.innerHTML = '';
 }
@@ -91,13 +208,11 @@ function ResetCardContainer(){
 // function to validate form
 function ValidateForm() {
   const title = document.querySelector('#title').value;
-  const author = document.querySelector('#author').value;
-  const pages = document.querySelector('#pages').value;
-  
-  if (title.trim() === '' || author.trim() === '' || pages.trim() === '') {
+
+  if (title.trim() === '') {
     return false;
   }
-  
+
   return true;
 }
 
@@ -113,7 +228,7 @@ addBookBtn.addEventListener('click', () => {
 });
 
 dialog.addEventListener('click', (event) => {
-  if(event.target === dialog){
+  if (event.target === dialog) {
     dialog.close();
   }
 });
@@ -127,7 +242,7 @@ submitBtn.addEventListener('click', (event) => {
   if (ValidateForm()) {
     AddBookToLibrary();
   }
-  else{
+  else {
     //display error message for 5 seconds. textcontent as "Please fill in all fields"
     const errormsg = document.querySelector('.error-msg');
     errormsg.textContent = 'Please fill in all fields!!!';
@@ -142,13 +257,13 @@ submitBtn.addEventListener('click', (event) => {
 // similarly for remove button
 
 document.querySelector('.card-container').addEventListener('click', (event) => {
-  if(event.target.classList.contains('status-btn')){
+  if (event.target.classList.contains('status-btn')) {
     const index = event.target.parentElement.parentElement.getAttribute('data-index');
     myLibrary[index].toggleRead();
     ResetCardContainer();
     DisplayBooksAsCards();
   }
-  else if(event.target.classList.contains('remove')){
+  else if (event.target.classList.contains('remove')) {
     const index = event.target.parentElement.parentElement.getAttribute('data-index');
     myLibrary.splice(index, 1);
     ResetCardContainer();
