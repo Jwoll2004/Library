@@ -58,8 +58,15 @@ button:hover{
     width: auto;
     border-radius: 50%;
 }
-/* card section */
+/* main section */
 .main-content {
+    padding: 20px;
+
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+}
+
+.myLib{
     padding: 20px;
 
     display: flex;
@@ -67,6 +74,7 @@ button:hover{
     gap: 20px;
     align-items: center;
 }
+
 
 .card-container{
     width: 100%;
@@ -139,6 +147,34 @@ input {
 
 ::backdrop {
     background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* browse section */
+.browse{
+    padding: 20px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    border-left: 1px solid #ccc;
+}
+.search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+.search input {
+    /* set relative width */
+    width: 60%;
+}
+.search-btn{
+    padding: 5px;
+}
+.search-btn img{
+    height: 30px;
+    width: auto;
 }
 
 
