@@ -60,7 +60,7 @@ async function fetchBookDetails(title) {
   const author = firstDoc.author_name[0];
   const pages = firstDoc.number_of_pages_median;
 
-  const BookCoverURL = `http://bookcover.longitood.com/bookcover/${firstIsbn}`;
+  const BookCoverURL = `https://bookcover.longitood.com/bookcover/${firstIsbn}`;
   const coverResponse = await fetch(BookCoverURL);
   if (!coverResponse.ok) {
     throw new Error('Network response was not ok');
